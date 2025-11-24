@@ -11,6 +11,7 @@ Cooked Life is an entertaining web application that analyzes your music taste, a
 - **Spotify Integration**: Analyzes your music listening habits, playlists, and favorite artists
 - **AniList Integration**: Reviews your anime and manga statistics, favorites, and viewing patterns
 - **Valorant Integration**: Examines your gaming performance and player statistics
+- **Steam Integration**: Summarizes top games, recent playtime, and total hours
 - **AI-Powered Roasts**: Utilizes Google Gemini AI to generate creative, personalized roasts
 - **Shareable Results**: Generate unique links to share your roasts with others
 - **Modern Web Interface**: Clean, responsive UI built with Flask templates
@@ -72,6 +73,9 @@ Cooked Life is an entertaining web application that analyzes your music taste, a
 
    # Gemini API
    GEMINI_API_KEY=your_gemini_api_key
+   
+   # Steam API
+   STEAM_API_KEY=your_steam_web_api_key
    ```
 
 5. Initialize the database:
@@ -88,6 +92,8 @@ Cooked Life is an entertaining web application that analyzes your music taste, a
 - **Google OAuth**: Create credentials at [Google Cloud Console](https://console.cloud.google.com/)
 - **Gemini API**: Obtain an API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
 - **Henrik API (Valorant)**: Get your API key from [Henrik's Valorant API](https://henrik-3.gitbook.io/hendrik-api)
+ - **Henrik API (Valorant)**: Get your API key from [Henrik's Valorant API](https://henrik-3.gitbook.io/hendrik-api)
+ - **Steam Web API**: Obtain a key from the [Steam Web API key page](https://steamcommunity.com/dev/apikey)
 
 ## Usage Instructions
 
@@ -114,9 +120,26 @@ Cooked Life is an entertaining web application that analyzes your music taste, a
 ### Using the Application
 
 1. **Home Page**: Navigate to the main page to get started
-2. **Connect Services**: Authenticate with Spotify, AniList, or Valorant
+2. **Connect Services**: Authenticate with Spotify, AniList, Valorant, or provide Steam ID / vanity
 3. **Generate Roast**: Click the roast button to analyze your data and generate a personalized roast
 4. **Share**: Use the generated share link to show your roast to friends
+
+### Steam Usage
+
+To include Steam data, supply either `steam_id` (numeric) or `steam_vanity` in the roast request body. Vanity names are resolved automatically.
+
+Example request payload:
+
+```json
+{
+   "anilist_user": "YourAniListName",
+   "valorant_name": "AgentSlayer",
+   "valorant_tag": "1234",
+   "steam_vanity": "yourVanityName"
+}
+```
+
+If both are provided, `steam_id` takes precedence. Omit both to exclude Steam.
 
 ## Project Structure
 
@@ -137,6 +160,7 @@ Cooked-Life/
 │   │   ├── gemini.py
 │   │   ├── spotify.py
 │   │   └── valorant.py
+│   │   ├── steam.py
 │   ├── static/               # CSS, JS, images
 │   ├── templates/            # HTML templates
 │   └── utils/                # Helper functions
