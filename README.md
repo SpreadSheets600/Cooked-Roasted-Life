@@ -92,8 +92,7 @@ Cooked Life is an entertaining web application that analyzes your music taste, a
 - **Google OAuth**: Create credentials at [Google Cloud Console](https://console.cloud.google.com/)
 - **Gemini API**: Obtain an API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
 - **Henrik API (Valorant)**: Get your API key from [Henrik's Valorant API](https://henrik-3.gitbook.io/hendrik-api)
- - **Henrik API (Valorant)**: Get your API key from [Henrik's Valorant API](https://henrik-3.gitbook.io/hendrik-api)
- - **Steam Web API**: Obtain a key from the [Steam Web API key page](https://steamcommunity.com/dev/apikey)
+- **Steam Web API**: Obtain a key from the [Steam Web API key page](https://steamcommunity.com/dev/apikey)
 
 ## Usage Instructions
 
