@@ -1,18 +1,21 @@
 class CombinedUserData:
-    def __init__(self, spotify=None, valorant=None, anime=None):
+    def __init__(self, spotify=None, valorant=None, anime=None, steam=None):
         self.spotify = spotify or {}
         self.valorant = valorant or {}
         self.anime = anime or {}
+        self.steam = steam or {}
 
     def as_dict(self):
         return {
             "spotify": self.spotify,
             "valorant": self.valorant,
             "anime": self.anime,
+            "steam": self.steam,
             "sources": [
-                *(["Spotify"] if self.spotify else []),
-                *(["Valorant"] if self.valorant else []),
-                *(["AniList"] if self.anime else []),
+                *( ["Spotify"] if self.spotify else []),
+                *( ["Valorant"] if self.valorant else []),
+                *( ["AniList"] if self.anime else []),
+                *( ["Steam"] if self.steam else []),
             ],
         }
 
@@ -43,5 +46,14 @@ class CombinedUserData:
                 f"Currently Reading Manga: {self.anime.get('manga_reading_list')}\n"
                 f"Completed Manga (Top 10): {self.anime.get('manga_completed_list')}\n"
                 f"Top Manga Genres: {self.anime.get('top_manga_genres')}\nFavorite Manga: {self.anime.get('favorite_manga')}"
+            )
+        if self.steam:
+            parts.append(
+                "Steam Data:\n"
+                f"Player: {self.steam.get('player_name')} (SteamID: {self.steam.get('steam_id')})\n"
+                f"Profile: {self.steam.get('profile_url')}\n"
+                f"Total Playtime: {self.steam.get('total_playtime_hours')}h\n"
+                f"Top Games: {self.steam.get('top_games')}\n"
+                f"Recent Games: {self.steam.get('recent_games')}"
             )
         return "\n\n".join(parts)
