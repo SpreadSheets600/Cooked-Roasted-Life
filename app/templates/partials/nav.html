@@ -1,20 +1,58 @@
-<nav
-  class="border-b border-slate-700 bg-slate-800/60 backdrop-blur flex items-center justify-between px-4 py-3 rounded-b md:rounded">
-  <div class="font-bold text-lg tracking-tight">🔥 Roast My Taste</div>
-  <div class="flex gap-4 text-sm items-center">
-    <a class="hover:text-pink-400" href="/">Home</a>
-    <a class="hover:text-pink-400" href="/roast">Public Roasts</a>
-    <a class="hover:text-pink-400" href="https://github.com/SpreadSheets600/Cooked-Roasted-Life">Public Roasts</a>
+<nav class="border-b border-slate-700 bg-slate-800/60 backdrop-blur px-4 py-3 rounded-b md:rounded">
+  <div class="flex items-center justify-between">
+    <div class="font-bold text-base md:text-lg tracking-tight">🔥 Roast My Taste</div>
+
+    <!-- Desktop Navigation -->
+    <div class="hidden md:flex gap-4 text-sm items-center">
+      <a class="hover:text-pink-400" href="/">Home</a>
+      <a class="hover:text-pink-400" href="/roast">Public Roasts</a>
+      <a class="hover:text-pink-400" href="https://github.com/SpreadSheets600/Cooked-Roasted-Life" target="_blank"
+        rel="noopener">GitHub</a>
+      {% if session.get('user_id') %}
+      <div class="flex items-center gap-2">
+        {% if session.get('user_picture') %}
+        <img src="{{ session.get('user_picture') }}" class="w-6 h-6 rounded-full" alt="Profile" />
+        {% endif %}
+        <span class="text-slate-300">{{ session.get('user_name') }}</span>
+        <a href="/google/logout" class="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs">Logout</a>
+      </div>
+      {% else %}
+      <a href="/google/login" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 rounded">Login</a>
+      {% endif %}
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button id="mobile-menu-btn" class="md:hidden p-2 hover:bg-slate-700 rounded">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <div id="mobile-menu" class="hidden md:hidden mt-3 pt-3 border-t border-slate-700 space-y-2">
+    <a class="block py-2 hover:text-pink-400" href="/">Home</a>
+    <a class="block py-2 hover:text-pink-400" href="/roast">Public Roasts</a>
+    <a class="block py-2 hover:text-pink-400" href="https://github.com/SpreadSheets600/Cooked-Roasted-Life"
+      target="_blank" rel="noopener">GitHub</a>
     {% if session.get('user_id') %}
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 py-2">
       {% if session.get('user_picture') %}
       <img src="{{ session.get('user_picture') }}" class="w-6 h-6 rounded-full" alt="Profile" />
       {% endif %}
       <span class="text-slate-300">{{ session.get('user_name') }}</span>
-      <a href="/google/logout" class="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs">Logout</a>
     </div>
+    <a href="/google/logout" class="block py-2 px-3 bg-slate-700 hover:bg-slate-600 rounded text-center">Logout</a>
     {% else %}
-    <a href="/google/login" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 rounded">Login with Google</a>
+    <a href="/google/login" class="block py-2 px-3 bg-blue-600 hover:bg-blue-500 rounded text-center">Login with
+      Google</a>
     {% endif %}
   </div>
 </nav>
+
+<script>
+  document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('hidden');
+  });
+</script>
