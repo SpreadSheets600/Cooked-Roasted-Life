@@ -1,4 +1,4 @@
-# Cooked Life
+# Cooked Roasted Life
 
 A Flask-based web application that generates AI-powered roasts based on your digital lifestyle data from Spotify, AniList, and Valorant.
 
