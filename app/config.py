@@ -37,6 +37,9 @@ class Config:
     # Valorant API
     HENRIK_API_KEY = os.getenv("HENRIK_API_KEY")
 
+    # Steam API
+    STEAM_API_KEY = os.getenv("STEAM_API_KEY")
+
     # Gemini API
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
