@@ -21,9 +21,13 @@ def generate_roast():
     anilist_user = body.get("anilist_user")
 
     spotify_service = SpotifyService()
-    spotify_data = (
-        spotify_service.get_roast_profile_data() if spotify_service.is_ready() else {}
-    )
+    if spotify_service.is_ready():
+        spotify_data = spotify_service.get_roast_profile_data()
+    else:
+        spotify_data = {}
+        # Remove Spotify token if present
+        if session.get("spotify_token_info"):
+            session.pop("spotify_token_info", None)
 
     valorant_data = {}
     if valorant_name and valorant_tag:
@@ -69,6 +73,8 @@ def generate_roast():
         track_recent_roast(user_id, roast_id)
 
     db.session.commit()
+
+    session.pop("spotify_token_info", None)
 
     return jsonify(
         {
