@@ -1,7 +1,13 @@
 from . import api_bp
 from ..models import CombinedUserData
 from ..models.database import db, Roast, RecentRoast
-from ..services import SpotifyService, ValorantService, AnimeService, GeminiRoaster
+from ..services import (
+    SpotifyService,
+    ValorantService,
+    AnimeService,
+    GeminiRoaster,
+    SteamService,
+)
 
 import uuid
 from datetime import datetime
@@ -19,6 +25,9 @@ def generate_roast():
     valorant_name = body.get("valorant_name")
     valorant_tag = body.get("valorant_tag")
     anilist_user = body.get("anilist_user")
+    
+    steam_id = body.get("steam_id")
+    steam_vanity = body.get("steam_vanity")
 
     spotify_service = SpotifyService()
     if spotify_service.is_ready():
@@ -39,8 +48,15 @@ def generate_roast():
     if anilist_user:
         anime_data = AnimeService().get_roast_data(anilist_user)
 
+    steam_data = {}
+    if steam_id or steam_vanity:
+        steam_data = SteamService().get_roast_data(steam_id=steam_id, vanity=steam_vanity)
+
     combined = CombinedUserData(
-        spotify=spotify_data, valorant=valorant_data, anime=anime_data
+        spotify=spotify_data,
+        valorant=valorant_data,
+        anime=anime_data,
+        steam=steam_data,
     )
     prompt_block = combined.prompt_block()
 
@@ -64,6 +80,8 @@ def generate_roast():
             "valorant_name": valorant_name,
             "valorant_tag": valorant_tag,
             "anilist_user": anilist_user,
+            "steam_id": steam_id,
+            "steam_vanity": steam_vanity,
         },
         is_public=True,
     )
