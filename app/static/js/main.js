@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const shareUrlInput = document.getElementById("share-url-input");
 	const copyUrlBtn = document.getElementById("copy-url-btn");
 	const historyList = document.getElementById("history-list");
+	const submitButton = form?.querySelector('button[type="submit"]');
 
 	let currentRoastId = null;
 
@@ -23,13 +24,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	if (!form) return;
 
+	const spotifyAuthenticated = document.querySelector('[href="/spotify/logout"]') !== null;
+
+	function validateDataSources() {
+		const valorantName = document.getElementById("valorant_name")?.value.trim();
+		const valorantTag = document.getElementById("valorant_tag")?.value.trim();
+		const anilistUser = document.getElementById("anilist_user")?.value.trim();
+		const steamId = document.getElementById("steam_id")?.value.trim();
+		const steamVanity = document.getElementById("steam_vanity")?.value.trim();
+
+		const hasValorant = valorantName && valorantTag;
+		const hasAnilist = anilistUser;
+		const hasSteam = steamId || steamVanity;
+		const hasSpotify = spotifyAuthenticated;
+
+		const hasAnyData = hasValorant || hasAnilist || hasSteam || hasSpotify;
+
+		if (submitButton) {
+			if (hasAnyData) {
+				submitButton.disabled = false;
+				submitButton.classList.remove("opacity-50", "cursor-not-allowed");
+				submitButton.classList.add("hover:bg-pink-500");
+			} else {
+				submitButton.disabled = true;
+				submitButton.classList.add("opacity-50", "cursor-not-allowed");
+				submitButton.classList.remove("hover:bg-pink-500");
+			}
+		}
+	}
+
+	const inputs = form.querySelectorAll("input, select");
+	inputs.forEach((input) => {
+		input.addEventListener("input", validateDataSources);
+		input.addEventListener("change", validateDataSources);
+	});
+
+	validateDataSources();
+
 	form.addEventListener("submit", async (e) => {
 		e.preventDefault();
 		roastText.textContent = "Generating...";
 		resultBox.classList.remove("hidden");
 		shareUrlBox.classList.add("hidden");
 
-		const data = Object.fromEntries(new FormData(form).entries());
+		const rawEntries = Object.fromEntries(new FormData(form).entries());
+
+		const data = Object.fromEntries(
+			Object.entries(rawEntries)
+				.map(([k, v]) => [k, typeof v === "string" ? v.trim() : v])
+				.filter(([_, v]) => v !== "" && v !== undefined && v !== null)
+		);
 		try {
 			const res = await fetch("/api/roast", {
 				method: "POST",
@@ -132,6 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const parts = [];
 		if (inputs.valorant_name) parts.push(`🎮 ${inputs.valorant_name}#${inputs.valorant_tag}`);
 		if (inputs.anilist_user) parts.push(`📺 ${inputs.anilist_user}`);
+		if (inputs.steam_id || inputs.steam_vanity) parts.push(`🕹 ${inputs.steam_id || inputs.steam_vanity}`);
 		return parts.join(" • ") || "Roast";
 	}
 
