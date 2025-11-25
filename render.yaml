@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: cooked-roasted-life
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn run:app --bind 0.0.0.0:${PORT}
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FRONTEND_ORIGIN
+        value: "https://spreadSheets600.github.io/Cooked-Roasted-Life"
+      - key: SESSION_COOKIE_SAMESITE
+        value: None
+      - key: SESSION_COOKIE_SECURE
+        value: "true"
