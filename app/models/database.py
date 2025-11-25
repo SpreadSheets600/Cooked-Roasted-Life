@@ -61,7 +61,7 @@ class Roast(db.Model):
             "sources": self.sources,
             "raw": self.raw_data,
             "inputs": self.inputs,
-            "timestamp": self.created_at.isoformat(),
+            "timestamp": self.created_at.isoformat() + "Z",
             "user": self.user.to_dict() if self.user else None,
             "is_public": self.is_public,
         }
