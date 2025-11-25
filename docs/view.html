@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>VIEW_LOG // COOKED.LIFE</title>
+
+		<!-- Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,100..1000&display=swap" rel="stylesheet" />
+
+		<!-- Tailwind & Config -->
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script>
+			tailwind.config = {
+				darkMode: "class",
+				theme: {
+					extend: {
+						fontFamily: {
+							sans: ["DM Sans", "sans-serif"],
+							mono: ["JetBrains Mono", "monospace"],
+							display: ["Syne", "sans-serif"],
+							grotesk: ["Space Grotesk", "sans-serif"],
+						},
+						colors: {
+							obsidian: "#030305",
+							midnight: "#0A0A0F",
+							electric: "#3B82F6",
+							cyber: "#8B5CF6",
+							acid: "#CCFF00",
+							glass: "rgba(255, 255, 255, 0.03)",
+							"glass-border": "rgba(255, 255, 255, 0.08)",
+						},
+						backgroundImage: {
+							"gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+							noise: "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.05%22/%3E%3C/svg%3E')",
+						},
+						animation: {
+							"pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+							float: "float 6s ease-in-out infinite",
+							marquee: "marquee 25s linear infinite",
+						},
+						keyframes: {
+							float: {
+								"0%, 100%": { transform: "translateY(0)" },
+								"50%": { transform: "translateY(-10px)" },
+							},
+							marquee: {
+								"0%": { transform: "translateX(0)" },
+								"100%": { transform: "translateX(-100%)" },
+							},
+						},
+					},
+				},
+			};
+		</script>
+		<style>
+			.glass-panel {
+				background: rgba(255, 255, 255, 0.03);
+				backdrop-filter: blur(10px);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+			}
+			body {
+				background-color: #030305;
+				color: #e2e8f0;
+			}
+			/* Custom Scrollbar */
+			::-webkit-scrollbar {
+				width: 8px;
+			}
+			::-webkit-scrollbar-track {
+				background: #0a0a0f;
+			}
+			::-webkit-scrollbar-thumb {
+				background: #333;
+				border-radius: 4px;
+			}
+			::-webkit-scrollbar-thumb:hover {
+				background: #555;
+			}
+		</style>
+		<script src="./config.js"></script>
+	</head>
+	<body class="min-h-full bg-obsidian text-slate-200 selection:bg-electric selection:text-white overflow-x-hidden">
+		<!-- Noise Overlay -->
+		<div class="fixed inset-0 bg-noise opacity-20 -z-10 pointer-events-none"></div>
+
+		<!-- Navbar -->
+		<nav class="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-obsidian/80 backdrop-blur-md">
+			<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+				<div class="flex items-center gap-2">
+					<div class="w-2 h-2 bg-electric rounded-full animate-pulse"></div>
+					<a href="./"><span class="font-display font-bold text-xl tracking-tighter">COOKED - LIFE</span></a>
+				</div>
+
+				<!-- Desktop Menu -->
+				<div class="hidden md:flex items-center gap-8 font-mono text-sm text-slate-400">
+					<a href="./" class="hover:text-white transition-colors">TERMINAL</a>
+					<a href="./public.html" class="hover:text-white transition-colors">ARCHIVE</a>
+					<a href="https://github.com/SpreadSheets600/Cooked-Roasted-Life" target="_blank" class="hover:text-white transition-colors">SOURCE</a>
+				</div>
+
+				<!-- Mobile Menu Button -->
+				<button id="mobile-menu-btn" class="md:hidden text-white p-2">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<line x1="3" y1="12" x2="21" y2="12"></line>
+						<line x1="3" y1="6" x2="21" y2="6"></line>
+						<line x1="3" y1="18" x2="21" y2="18"></line>
+					</svg>
+				</button>
+			</div>
+
+			<!-- Mobile Menu -->
+			<div id="mobile-menu" class="hidden md:hidden border-t border-white/5 bg-obsidian/95 backdrop-blur-xl">
+				<div class="flex flex-col p-6 gap-4 font-mono text-sm text-slate-400">
+					<a href="./" class="hover:text-white transition-colors py-2">TERMINAL</a>
+					<a href="./public.html" class="hover:text-white transition-colors py-2">ARCHIVE</a>
+					<a href="https://github.com/SpreadSheets600/Cooked-Roasted-Life" target="_blank" class="hover:text-white transition-colors py-2">SOURCE</a>
+				</div>
+			</div>
+		</nav>
+
+		<script>
+			const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+			const mobileMenu = document.getElementById("mobile-menu");
+			if (mobileMenuBtn && mobileMenu) {
+				mobileMenuBtn.addEventListener("click", () => {
+					mobileMenu.classList.toggle("hidden");
+				});
+			}
+		</script>
+
+		<main class="pt-32 pb-20 px-6">
+			<section class="max-w-4xl mx-auto space-y-8">
+				<div class="glass-panel rounded-3xl p-8 md:p-12 border border-white/10 relative overflow-hidden animate-float">
+					<div class="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
+						<div class="flex items-center gap-4">
+							<div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+								<img id="dicemedia-pfp" alt="Dice Media PFP" class="w-full h-full rounded-full object-cover" />
+							</div>
+							<div>
+								<h2 class="font-display font-bold text-xl text-white">SUBJECT_ANALYSIS</h2>
+								<p id="roast-time" class="font-mono text-xs text-slate-500">TIMESTAMP : --</p>
+							</div>
+						</div>
+						<div id="roast-sources" class="flex gap-2"></div>
+					</div>
+
+					<div class="prose prose-invert max-w-none mb-8">
+						<p id="roast-text" class="font-mono text-lg md:text-xl leading-relaxed text-slate-200">DECRYPTING DATA...</p>
+					</div>
+
+					<div id="roast-source-panels" class="mt-6 pt-6 border-t border-white/5 hidden">
+						<div class="flex items-center justify-between mb-3">
+							<h3 class="font-mono text-xs text-slate-500 tracking-widest">SOURCE_PAYLOADS</h3>
+						</div>
+						<div id="source-panels-list" class="space-y-3"></div>
+					</div>
+				</div>
+
+				<div class="flex justify-center gap-4">
+					<a href="./" class="px-8 py-3 bg-white text-black font-display font-bold text-sm uppercase tracking-widest rounded-full hover:scale-105 transition-transform"> GENERATE NEW </a>
+				</div>
+			</section>
+		</main>
+
+		<!-- Footer -->
+		<footer class="border-t border-white/5 bg-black/50 backdrop-blur-sm pt-20 pb-10 overflow-hidden">
+			<div class="mb-16 relative">
+				<div class="absolute inset-0 bg-gradient-to-r from-obsidian via-transparent to-obsidian z-10 pointer-events-none"></div>
+				<div class="animate-marquee whitespace-nowrap flex gap-8 text-[12vw] font-display font-black text-white/5 leading-none select-none pointer-events-none">
+					<span>COOKED BY AI</span>
+					<span>•</span>
+					<span>ULTIMATE DIGITAL ROAST</span>
+					<span>•</span>
+					<span>COOKED - LIFE</span>
+					<span>•</span>
+					<span>COOKED BY AI</span>
+				</div>
+			</div>
+			<div class="max-w-7xl mx-auto px-6">
+				<div class="flex flex-col md:flex-row justify-between items-center gap-6">
+					<div class="text-center md:text-left">
+						<h4 class="font-display font-bold text-2xl mb-2">COOKED - LIFE</h4>
+						<p class="text-slate-500 font-mono text-sm">AI-POWERED PERSONALITY DECONSTRUCTION</p>
+					</div>
+					<div class="flex gap-6">
+						<a href="#" class="text-slate-400 hover:text-white transition-colors">GITHUB</a>
+					</div>
+				</div>
+				<div class="mt-12 pt-8 border-t border-white/5 text-center">
+					<p class="font-mono text-xs text-slate-600">SYSTEM VERSION 2.0 // BUILD 2025 // SpreadSheets600</p>
+				</div>
+			</div>
+		</footer>
+
+		<script>
+			const API_BASE = (window.API_BASE || "").replace(/\/$/, "");
+			const urlParams = new URLSearchParams(window.location.search);
+			const id = urlParams.get("id");
+
+			function formatDate(iso) {
+				const date = new Date(iso);
+				return date.toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+			}
+
+			async function loadRoast() {
+				if (!id) {
+					document.getElementById("roast-text").textContent = "ERROR: NO ID PROVIDED.";
+					return;
+				}
+
+				try {
+					const res = await fetch(`${API_BASE}/api/roast/${id}`);
+					if (!res.ok) throw new Error("Not found");
+					const data = await res.json();
+
+					document.getElementById("roast-text").textContent = data.roast;
+					document.getElementById("roast-time").textContent = `TIMESTAMP : ${formatDate(data.timestamp)}`;
+
+					// Dicebear API
+					document.getElementById("dicemedia-pfp").src = `https://api.dicebear.com/9.x/thumbs/svg?seed=${id}`;
+
+					// Inputs
+					const chipsDiv = document.getElementById("roast-input-chips");
+					const inputs = data.inputs || {};
+
+					renderSourcePanels(data.raw || {});
+				} catch (err) {
+					document.getElementById("roast-text").textContent = "ERROR: DATA CORRUPTED OR MISSING.";
+				}
+			}
+
+			function addChip(container, label, value, color) {
+				const chip = document.createElement("div");
+				chip.className = `px-3 py-1 rounded-full bg-${color}-500/10 border border-${color}-500/20 text-${color}-400 font-mono text-xs`;
+				chip.textContent = `${label}: ${value}`;
+				container.appendChild(chip);
+			}
+
+			function renderSourcePanels(raw = {}) {
+				const wrapper = document.getElementById("roast-source-panels");
+				const list = document.getElementById("source-panels-list");
+				if (!wrapper || !list) return;
+
+				list.innerHTML = "";
+				const sections = [
+					{ key: "spotify", label: "Spotify", icon: "🎧" },
+					{ key: "valorant", label: "Valorant", icon: "🎮" },
+					{ key: "anime", label: "AniList", icon: "📺" },
+					{ key: "steam", label: "Steam", icon: "🚩" },
+				];
+
+				let rendered = 0;
+				sections.forEach(({ key, label, icon }) => {
+					const payload = raw[key];
+					if (!payload || Object.keys(payload).length === 0) return;
+					rendered++;
+
+					const details = document.createElement("details");
+					details.className = "p-4 bg-black/30 border border-white/5 rounded-2xl";
+
+					const summary = document.createElement("summary");
+					summary.className = "font-mono text-sm text-white flex items-center justify-between cursor-pointer";
+					summary.innerHTML = `<span>${icon} ${label}</span><span class="text-electric text-xs">EXPAND</span>`;
+
+					const pre = document.createElement("pre");
+					pre.className = "mt-3 text-xs text-slate-400 overflow-x-auto whitespace-pre-wrap break-words";
+					pre.textContent = formatPayload(payload);
+
+					details.appendChild(summary);
+					details.appendChild(pre);
+					list.appendChild(details);
+				});
+
+				if (rendered === 0) {
+					wrapper.classList.add("hidden");
+				} else {
+					wrapper.classList.remove("hidden");
+				}
+			}
+
+			function formatPayload(payload) {
+				if (payload === null || payload === undefined) return "No payload captured.";
+				if (typeof payload === "string") return payload;
+				try {
+					return JSON.stringify(payload, null, 2);
+				} catch {
+					return String(payload);
+				}
+			}
+
+			document.addEventListener("DOMContentLoaded", loadRoast);
+		</script>
+	</body>
+</html>
