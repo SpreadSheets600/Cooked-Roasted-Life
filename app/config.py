@@ -45,3 +45,14 @@ class Config:
 
     # Application Settings
     DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")
+
+    # Frontend Origin For CORS
+    FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN")
+
+    # Cross-Site Cookie Settings
+    SESSION_COOKIE_SAMESITE = os.getenv("SESSION_COOKIE_SAMESITE", "None")
+    SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "True").lower() in (
+        "true",
+        "1",
+        "t",
+    )
