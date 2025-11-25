@@ -2,16 +2,18 @@ from . import api_bp
 from ..models import CombinedUserData
 from ..models.database import db, Roast, RecentRoast
 from ..services import (
-    SpotifyService,
     ValorantService,
-    AnimeService,
+    SpotifyService,
     GeminiRoaster,
+    AnimeService,
     SteamService,
 )
 
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import jsonify, request, session
+
+rate_limit_store = {}
 
 
 @api_bp.get("/ping")
@@ -19,22 +21,50 @@ def ping():
     return jsonify({"ok": True})
 
 
+@api_bp.get("/auth/status")
+def auth_status():
+    return jsonify(
+        {
+            "spotify_authenticated": bool(session.get("spotify_authenticated")),
+            "user": {
+                "name": session.get("user_name"),
+            }
+        }
+    )
+
+
 @api_bp.post("/roast")
 def generate_roast():
+    client_ip = request.remote_addr
+    now = datetime.utcnow()
+
+    last_request = rate_limit_store.get(client_ip)
+
+    if last_request:
+        elapsed = now - last_request
+        if elapsed < timedelta(minutes=5):
+            wait_time = 300 - int(elapsed.total_seconds())
+            return jsonify(
+                {"error": f"Rate limit exceeded. Please wait {wait_time} seconds."}
+            ), 429
+
+    rate_limit_store[client_ip] = now
+
     body = request.get_json(force=True) if request.is_json else request.form
     valorant_name = body.get("valorant_name")
     valorant_tag = body.get("valorant_tag")
     anilist_user = body.get("anilist_user")
-    
+
     steam_id = body.get("steam_id")
     steam_vanity = body.get("steam_vanity")
 
+    spotify_display_name = None
     spotify_service = SpotifyService()
     if spotify_service.is_ready():
         spotify_data = spotify_service.get_roast_profile_data()
+        spotify_display_name = session.get("user_name")
     else:
         spotify_data = {}
-        # Remove Spotify token if present
         if session.get("spotify_token_info"):
             session.pop("spotify_token_info", None)
 
@@ -50,7 +80,9 @@ def generate_roast():
 
     steam_data = {}
     if steam_id or steam_vanity:
-        steam_data = SteamService().get_roast_data(steam_id=steam_id, vanity=steam_vanity)
+        steam_data = SteamService().get_roast_data(
+            steam_id=steam_id, vanity=steam_vanity
+        )
 
     combined = CombinedUserData(
         spotify=spotify_data,
@@ -82,6 +114,7 @@ def generate_roast():
             "anilist_user": anilist_user,
             "steam_id": steam_id,
             "steam_vanity": steam_vanity,
+            "spotify_name": spotify_display_name,
         },
         is_public=True,
     )
@@ -92,6 +125,17 @@ def generate_roast():
 
     db.session.commit()
 
+    try:
+        my_roast_ids = session.get("my_roast_ids", [])
+
+        if roast_id in my_roast_ids:
+            my_roast_ids.remove(roast_id)
+
+        my_roast_ids.insert(0, roast_id)
+        session["my_roast_ids"] = my_roast_ids[:20]
+    except Exception:
+        pass
+
     session.pop("spotify_token_info", None)
 
     return jsonify(
@@ -100,6 +144,8 @@ def generate_roast():
             "sources": combined.as_dict()["sources"],
             "roast": roast_text,
             "raw": combined.as_dict(),
+            "inputs": roast.inputs,
+            "timestamp": roast.created_at.isoformat() + "Z",
         }
     )
 
@@ -108,7 +154,7 @@ def generate_roast():
 def get_roast(roast_id):
     roast = Roast.query.filter_by(id=roast_id).first()
     if not roast:
-        return jsonify({"error": "Roast Not Found"}), 404
+        return jsonify({"error": "Roast not found!"}), 404
 
     user_id = session.get("user_id")
     if user_id:
@@ -138,15 +184,10 @@ def track_recent_roast(user_id, roast_id):
         db.session.delete(old)
 
 
-# Roasts Are Auto-Saved On Generating
-@api_bp.post("/roast/save")
-def save_roast():
-    return jsonify({"success": True})
-
-
 @api_bp.get("/roast/history")
 def get_history():
     user_id = session.get("user_id")
+
     if not user_id:
         return jsonify({"roasts": []})
 
@@ -180,3 +221,18 @@ def get_public_roasts():
             "pages": roasts.pages,
         }
     )
+
+
+@api_bp.get("/roast/mine")
+def get_my_roasts():
+    ids = session.get("my_roast_ids", [])
+
+    if not ids:
+        return jsonify({"roasts": []})
+
+    items = Roast.query.filter(Roast.id.in_(ids)).all()
+    by_id = {r.id: r for r in items}
+
+    ordered = [by_id[i].to_dict() for i in ids if i in by_id]
+
+    return jsonify({"roasts": ordered})
