@@ -97,7 +97,7 @@
 
   <!-- Navbar -->
   <nav class="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-obsidian/80 backdrop-blur-md">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <div class="w-2 h-2 bg-electric rounded-full animate-pulse"></div>
         <a href="./"><span class="font-display font-bold text-xl tracking-tighter">COOKED - LIFE</span></a>
@@ -143,28 +143,28 @@
     }
   </script>
 
-  <main class="pt-32 pb-20 px-6">
-    <section class="max-w-6xl mx-auto space-y-16">
+  <main class="pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6">
+    <section class="max-w-6xl mx-auto space-y-12 sm:space-y-16">
       <!-- Hero -->
       <div class="text-center space-y-6 pt-10 relative">
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-electric/20 rounded-full blur-[100px] -z-10 pointer-events-none">
         </div>
-        <h1 class="text-6xl md:text-8xl font-display font-bold tracking-tighter leading-none">
+        <h1 class="text-4xl sm:text-6xl md:text-8xl font-display font-bold tracking-tighter leading-none">
           <span class="block text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-500">ULTIMATE</span>
           <span class="block text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-500">DIGITAL
             ROAST</span>
         </h1>
-        <p class="text-slate-400 font-mono max-w-4xl mx-auto text-lg">Provide whichever identifiers you want roasted.
+        <p class="text-slate-400 font-mono max-w-3xl sm:max-w-4xl mx-auto text-base sm:text-lg">Provide whichever identifiers you want roasted.
           Missing fields are skipped. Then bask in refined disrespect powered by Gemini.</p>
       </div>
 
       <!-- Form -->
-      <form id="roast-form" class="space-y-8">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+      <form id="roast-form" class="space-y-6 sm:space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6">
           <!-- Spotify -->
           <div
-            class="md:col-span-8 glass-panel rounded-3xl p-8 relative overflow-hidden group transition-all duration-500 hover:border-green-500/30">
+            class="md:col-span-8 glass-panel rounded-3xl p-6 sm:p-8 relative overflow-hidden group transition-all duration-500 hover:border-green-500/30">
             <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
               <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
@@ -185,13 +185,13 @@
                 <span id="spotify-status-text" class="font-mono text-sm text-slate-300">DISCONNECTED</span>
               </div>
               <a id="spotify-auth-btn" href="#"
-                class="px-4 py-1 bg-green-600 hover:bg-green-500 text-white font-bold rounded-full text-xs tracking-widest transition-all">CONNECT</a>
+                class="px-4 py-1.5 sm:py-1 bg-green-600 hover:bg-green-500 text-white font-bold rounded-full text-xs tracking-widest transition-all">CONNECT</a>
             </div>
           </div>
 
           <!-- Valorant -->
           <div
-            class="md:col-span-4 glass-panel rounded-3xl p-8 relative overflow-hidden group transition-all duration-500 hover:border-red-500/30">
+            class="md:col-span-4 glass-panel rounded-3xl p-6 sm:p-8 relative overflow-hidden group transition-all duration-500 hover:border-red-500/30">
             <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
               <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
@@ -224,7 +224,7 @@
 
           <!-- Steam -->
           <div
-            class="md:col-span-6 glass-panel rounded-3xl p-8 relative overflow-hidden group transition-all duration-500 hover:border-blue-500/30">
+            class="md:col-span-6 glass-panel rounded-3xl p-6 sm:p-8 relative overflow-hidden group transition-all duration-500 hover:border-blue-500/30">
             <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
               <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
@@ -249,7 +249,7 @@
 
           <!-- AniList -->
           <div
-            class="md:col-span-6 glass-panel rounded-3xl p-8 relative overflow-hidden group transition-all duration-500 hover:border-blue-400/30">
+            class="md:col-span-6 glass-panel rounded-3xl p-6 sm:p-8 relative overflow-hidden group transition-all duration-500 hover:border-blue-400/30">
             <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
               <svg role="img" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -266,9 +266,9 @@
         </div>
 
         <!-- Submit -->
-        <div class="flex justify-center pt-8">
+        <div class="flex justify-center pt-6 sm:pt-8">
           <button type="button" id="generate-btn"
-            class="group relative px-12 py-4 bg-white text-black font-display font-bold text-xl uppercase tracking-widest rounded-full overflow-hidden transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+            class="group relative px-8 sm:px-12 py-3 sm:py-4 bg-white text-black font-display font-bold text-lg sm:text-xl uppercase tracking-widest rounded-full overflow-hidden transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
             <span class="relative z-10">Generate Roast</span>
             <div
               class="absolute inset-0 bg-gradient-to-r from-electric to-cyber opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -278,8 +278,8 @@
       </form>
 
       <!-- Results -->
-      <div id="roast-result" class="hidden space-y-8">
-        <div class="glass-panel rounded-3xl p-8 md:p-12 border border-white/10 relative overflow-hidden">
+      <div id="roast-result" class="hidden space-y-6 sm:space-y-8">
+        <div class="glass-panel rounded-3xl p-6 sm:p-8 md:p-12 border border-white/10 relative overflow-hidden">
           <div class="flex items-center gap-4 mb-6">
             <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
             <span class="font-mono text-xs text-red-500 tracking-widest">LIVE TRANSMISSION</span>
@@ -289,7 +289,7 @@
             <p id="roast-text" class="font-mono text-lg md:text-xl leading-relaxed text-slate-200"></p>
           </div>
 
-          <div class="mt-8 flex flex-wrap gap-4 pt-8 border-t border-white/5">
+          <div class="mt-6 sm:mt-8 flex flex-wrap gap-4 pt-6 sm:pt-8 border-t border-white/5">
             <button id="share-btn"
               class="px-6 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full font-mono text-sm text-white transition-all flex items-center gap-2">
               <span>SHARE RESULT</span>
@@ -298,7 +298,7 @@
         </div>
 
         <!-- Share URL -->
-        <div id="share-url" class="hidden glass-panel p-6 rounded-2xl flex flex-col md:flex-row gap-4 items-center">
+        <div id="share-url" class="hidden glass-panel p-5 sm:p-6 rounded-2xl flex flex-col md:flex-row gap-4 items-center">
           <input id="share-url-input" readonly
             class="flex-1 bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-sm font-mono text-slate-400 focus:outline-none" />
           <button id="copy-url-btn"
@@ -307,16 +307,16 @@
       </div>
 
       <!-- History -->
-      <div class="pt-20 space-y-10">
+      <div class="pt-16 sm:pt-20 space-y-8 sm:space-y-10">
         <div>
           <div class="flex items-center justify-between mb-4">
-            <h2 class="font-display font-bold text-3xl text-white">LATEST_TRANSMISSION</h2>
+            <h2 class="font-display font-bold text-2xl sm:text-3xl text-white">LATEST_TRANSMISSION</h2>
           </div>
           <p id="latest-empty"
-            class="text-slate-500 font-mono text-sm col-span-full text-center border border-dashed border-white/10 rounded-2xl py-6">
+            class="text-slate-500 font-mono text-xs sm:text-sm col-span-full text-center border border-dashed border-white/10 rounded-2xl py-5 sm:py-6">
             No local roasts captured yet. Generate one to light up this feed.</p>
           <div id="latest-card"
-            class="hidden glass-panel rounded-3xl p-8 border border-white/10 relative overflow-hidden">
+            class="hidden glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 relative overflow-hidden">
             <div class="absolute inset-0 pointer-events-none opacity-30"
               style="background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.2), transparent 55%)"></div>
             <div class="relative">
@@ -336,8 +336,8 @@
         </div>
 
         <div>
-          <h2 class="font-display font-bold text-3xl mb-8 text-white">ARCHIVE_LOGS</h2>
-          <div id="history-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <h2 class="font-display font-bold text-2xl sm:text-3xl mb-6 sm:mb-8 text-white">ARCHIVE_LOGS</h2>
+          <div id="history-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <!-- History items -->
           </div>
         </div>
