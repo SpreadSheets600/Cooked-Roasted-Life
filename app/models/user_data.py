@@ -1,9 +1,17 @@
 class CombinedUserData:
-    def __init__(self, spotify=None, valorant=None, anime=None, steam=None):
+    def __init__(
+        self,
+        spotify=None,
+        valorant=None,
+        anime=None,
+        steam=None,
+        inputs=None,
+    ):
         self.spotify = spotify or {}
         self.valorant = valorant or {}
         self.anime = anime or {}
         self.steam = steam or {}
+        self.inputs = inputs or {}
 
     def as_dict(self):
         return {
@@ -11,6 +19,7 @@ class CombinedUserData:
             "valorant": self.valorant,
             "anime": self.anime,
             "steam": self.steam,
+            "inputs": self.inputs,
             "sources": [
                 *( ["Spotify"] if self.spotify else []),
                 *( ["Valorant"] if self.valorant else []),
@@ -56,4 +65,41 @@ class CombinedUserData:
                 f"Top Games: {self.steam.get('top_games')}\n"
                 f"Recent Games: {self.steam.get('recent_games')}"
             )
+        input_summary = self._format_input_summary()
+        if input_summary:
+            parts.append("User Provided Identifiers:\n" + input_summary)
+
+        if not parts:
+            return "No telemetry received. Invent a roast anyway."
+
         return "\n\n".join(parts)
+
+    def _format_input_summary(self):
+        if not self.inputs:
+            return ""
+
+        lines = []
+        spotify_name = self.inputs.get("spotify_name")
+        if spotify_name:
+            lines.append(f"- Spotify account connected as {spotify_name}.")
+
+        valorant_name = self.inputs.get("valorant_name")
+        valorant_tag = self.inputs.get("valorant_tag")
+        if valorant_name and valorant_tag:
+            region = (self.inputs.get("valorant_region") or "NA").upper()
+            lines.append(
+                f"- Valorant IGN {valorant_name}#{valorant_tag} ({region}) provided even if stats are missing."
+            )
+
+        anilist_user = self.inputs.get("anilist_user")
+        if anilist_user:
+            lines.append(f"- AniList profile submitted: {anilist_user}.")
+
+        steam_id = self.inputs.get("steam_id") or self.inputs.get("steam_vanity")
+        if steam_id:
+            lines.append(f"- Steam identifier: {steam_id}.")
+
+        if not lines:
+            return ""
+
+        return "\n".join(lines)
