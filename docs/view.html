@@ -91,7 +91,7 @@
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
 				<div class="flex items-center gap-2">
 					<div class="w-2 h-2 bg-electric rounded-full animate-pulse"></div>
-					<a href="./"><span class="font-display font-bold text-xl tracking-tighter">COOKED - LIFE</span></a>
+					<a href="./" class="font-display font-bold text-lg tracking-tight md:text-xl">COOKED - LIFE</a>
 				</div>
 
 				<!-- Desktop Menu -->
@@ -102,7 +102,7 @@
 				</div>
 
 				<!-- Mobile Menu Button -->
-				<button id="mobile-menu-btn" class="md:hidden text-white p-2">
+				<button id="mobile-menu-btn" class="md:hidden text-white p-2" aria-label="Toggle navigation">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 						<line x1="3" y1="12" x2="21" y2="12"></line>
 						<line x1="3" y1="6" x2="21" y2="6"></line>
@@ -136,8 +136,8 @@
 				<div class="glass-panel rounded-3xl p-6 sm:p-8 md:p-12 border border-white/10 relative overflow-hidden animate-float">
 					<div class="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
 						<div class="flex items-center gap-3 sm:gap-4">
-							<div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-								<img id="dicemedia-pfp" alt="Dice Media PFP" class="w-full h-full rounded-full object-cover" />
+							<div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10 overflow-hidden">
+								<img id="dicemedia-pfp" alt="DiceBear Avatar" class="w-full h-full object-cover" loading="lazy" referrerpolicy="no-referrer" src="https://api.dicebear.com/7.x/thumbs/png?seed=placeholder&background=%23030305" />
 							</div>
 							<div>
 								<h2 class="font-display font-bold text-lg sm:text-xl text-white">SUBJECT_ANALYSIS</h2>
@@ -205,6 +205,11 @@
 				return date.toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 			}
 
+			function getAvatarUrl(seed) {
+				const safeSeed = encodeURIComponent(seed || "anonymous");
+				return `https://api.dicebear.com/7.x/thumbs/png?seed=${safeSeed}&background=%23030305`;
+			}
+
 			async function loadRoast() {
 				if (!id) {
 					document.getElementById("roast-text").textContent = "ERROR: NO ID PROVIDED.";
@@ -219,8 +224,11 @@
 					document.getElementById("roast-text").textContent = data.roast;
 					document.getElementById("roast-time").textContent = `TIMESTAMP : ${formatDate(data.timestamp)}`;
 
-					// Dicebear API
-					document.getElementById("dicemedia-pfp").src = `https://api.dicebear.com/9.x/thumbs/svg?seed=${id}`;
+					// DiceBear Avatar
+					const avatar = document.getElementById("dicemedia-pfp");
+					if (avatar) {
+						avatar.src = getAvatarUrl(id);
+					}
 
 					// Inputs
 					const chipsDiv = document.getElementById("roast-input-chips");
