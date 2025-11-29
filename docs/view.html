@@ -196,7 +196,7 @@
 		</footer>
 
 		<script>
-			const API_BASE = (window.API_BASE || "").replace(/\/$/, "");
+			const API_BASE = (window.API_BASE || window.location.origin || "").replace(/\/$/, "");
 			const urlParams = new URLSearchParams(window.location.search);
 			const id = urlParams.get("id");
 
@@ -212,7 +212,7 @@
 				}
 
 				try {
-					const res = await fetch(`${API_BASE}/api/roast/${id}`);
+					const res = await fetch(`${API_BASE}/api/roast/${id}`, { credentials: "include" });
 					if (!res.ok) throw new Error("Not found");
 					const data = await res.json();
 
