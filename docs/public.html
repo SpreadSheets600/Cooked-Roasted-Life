@@ -88,7 +88,7 @@
 
 		<!-- Navbar -->
 		<nav class="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-obsidian/80 backdrop-blur-md">
-			<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
 				<div class="flex items-center gap-2">
 					<div class="w-2 h-2 bg-electric rounded-full animate-pulse"></div>
 					<a href="./"><span class="font-display font-bold text-xl tracking-tighter">COOKED - LIFE</span></a>
@@ -131,21 +131,21 @@
 			}
 		</script>
 
-		<main class="pt-32 pb-20 px-6">
-			<section class="max-w-7xl mx-auto space-y-12">
-				<div class="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/5 pb-8">
+		<main class="pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6">
+			<section class="max-w-7xl mx-auto space-y-10 sm:space-y-12">
+				<div class="flex flex-col md:flex-row justify-between items-end gap-4 sm:gap-6 border-b border-white/5 pb-6 sm:pb-8">
 					<div>
-						<h1 class="font-display font-bold text-4xl md:text-6xl mb-2">PUBLIC_ARCHIVE</h1>
-						<p class="font-mono text-slate-400">Global database of roasted entities.</p>
+						<h1 class="font-display font-bold text-3xl sm:text-4xl md:text-6xl mb-1 sm:mb-2">PUBLIC_ARCHIVE</h1>
+						<p class="font-mono text-slate-400 text-sm sm:text-base">Global database of roasted entities.</p>
 					</div>
 				</div>
 
-				<div id="public-roasts-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				<div id="public-roasts-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 					<div class="col-span-full text-center py-20 font-mono text-slate-500 animate-pulse">INITIALIZING DATA STREAM...</div>
 				</div>
 
-				<div id="load-more" class="text-center hidden pt-8">
-					<button class="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full font-mono text-sm text-white transition-all">LOAD_MORE_DATA</button>
+				<div id="load-more" class="text-center hidden pt-6 sm:pt-8">
+					<button class="px-6 sm:px-8 py-2.5 sm:py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full font-mono text-xs sm:text-sm text-white transition-all">LOAD_MORE_DATA</button>
 				</div>
 			</section>
 		</main>
@@ -229,7 +229,7 @@
 					data.roasts.forEach((r) => {
 						const div = document.createElement("div");
 
-						div.className = "glass-panel p-6 rounded-xl cursor-pointer hover:border-electric/50 transition-all group flex flex-col h-full";
+						div.className = "glass-panel p-5 sm:p-6 rounded-xl cursor-pointer hover:border-electric/50 transition-all group flex flex-col h-full";
 						div.onclick = () => (window.location.href = `./view.html?id=${r.id}`);
 						const inputsMarkup = formatInputs(r.inputs || {});
 
