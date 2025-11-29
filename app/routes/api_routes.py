@@ -53,10 +53,20 @@ def generate_roast():
     body = request.get_json(force=True) if request.is_json else request.form
     valorant_name = body.get("valorant_name")
     valorant_tag = body.get("valorant_tag")
+    valorant_region = body.get("valorant_region") or "na"
     anilist_user = body.get("anilist_user")
 
     steam_id = body.get("steam_id")
     steam_vanity = body.get("steam_vanity")
+
+    user_inputs = {
+        "valorant_name": valorant_name,
+        "valorant_tag": valorant_tag,
+        "valorant_region": valorant_region,
+        "anilist_user": anilist_user,
+        "steam_id": steam_id,
+        "steam_vanity": steam_vanity,
+    }
 
     spotify_display_name = None
     spotify_service = SpotifyService()
@@ -71,25 +81,45 @@ def generate_roast():
     valorant_data = {}
     if valorant_name and valorant_tag:
         valorant_data = ValorantService().get_roast_data(
-            valorant_name, valorant_tag, region=body.get("valorant_region", "na")
-        )
+            valorant_name, valorant_tag, region=valorant_region
+        ) or {}
+        if not valorant_data:
+            valorant_data = {
+                "type": "valorant",
+                "ign": f"{valorant_name}#{valorant_tag}",
+                "notes": "Valorant API unavailable; rely on handle only.",
+            }
 
     anime_data = {}
     if anilist_user:
-        anime_data = AnimeService().get_roast_data(anilist_user)
+        anime_data = AnimeService().get_roast_data(anilist_user) or {}
+        if not anime_data:
+            anime_data = {
+                "type": "anime",
+                "username": anilist_user,
+                "notes": "AniList data unavailable at generation time.",
+            }
 
     steam_data = {}
     if steam_id or steam_vanity:
         steam_data = SteamService().get_roast_data(
             steam_id=steam_id, vanity=steam_vanity
-        )
+        ) or {}
+        if not steam_data:
+            steam_data = {
+                "type": "steam",
+                "steam_id": steam_id or steam_vanity,
+                "notes": "Steam stats unavailable; id provided only.",
+            }
 
     combined = CombinedUserData(
         spotify=spotify_data,
         valorant=valorant_data,
         anime=anime_data,
         steam=steam_data,
+        inputs={**user_inputs, "spotify_name": spotify_display_name},
     )
+    combined_payload = combined.as_dict()
     prompt_block = combined.prompt_block()
 
     roast_text = ""
@@ -106,16 +136,9 @@ def generate_roast():
         id=roast_id,
         user_id=user_id,
         roast_text=roast_text,
-        sources=combined.as_dict()["sources"],
-        raw_data=combined.as_dict(),
-        inputs={
-            "valorant_name": valorant_name,
-            "valorant_tag": valorant_tag,
-            "anilist_user": anilist_user,
-            "steam_id": steam_id,
-            "steam_vanity": steam_vanity,
-            "spotify_name": spotify_display_name,
-        },
+        sources=combined_payload["sources"],
+        raw_data=combined_payload,
+        inputs={**user_inputs, "spotify_name": spotify_display_name},
         is_public=True,
     )
     db.session.add(roast)
@@ -141,9 +164,9 @@ def generate_roast():
     return jsonify(
         {
             "id": roast_id,
-            "sources": combined.as_dict()["sources"],
+            "sources": combined_payload["sources"],
             "roast": roast_text,
-            "raw": combined.as_dict(),
+            "raw": combined_payload,
             "inputs": roast.inputs,
             "timestamp": roast.created_at.isoformat() + "Z",
         }
@@ -219,6 +242,9 @@ def get_public_roasts():
             "total": roasts.total,
             "page": page,
             "pages": roasts.pages,
+            "has_next": roasts.has_next,
+            "has_prev": roasts.has_prev,
+            "per_page": per_page,
         }
     )
 
